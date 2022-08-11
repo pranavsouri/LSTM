@@ -6,10 +6,10 @@ pattern_range = 10 # minimum number of data points that defines a trend
 max_trend_points = 150 # maximum mnumber of data points in a trend
 current_index = 0
 x_axis = 'TEST_PERIOD_FORMATTED'
-y_axis = 'ATT_TP_DL_MV'
+y_axis = 'ATT_TP_UL_MV'
 trend_type = "TREND_TYPE"
 test_count = "ATT_TEST_COUNT_MV"
-file_name = 'amCharts Los Angeles.csv'
+file_name = 'amCharts National.csv'
 
 data = pd.read_csv(file_name)
 df = pd.DataFrame()
@@ -85,12 +85,12 @@ for current_index in range(pattern_range - 1, len(df[y_axis])):
             current_index += pattern_range
         else:  # anomaly
             print("index: " + str(current_index) + " anomaly: " + str(df[x_axis][current_index]))
-            if test >= strdev_tests * 2 + old_mean_tests or test <= old_mean_tests - strdev_tests * 2:  # high importance anomaly
-                anomalies.iat[current_index, 1] = datapoint
-                df[trend_type][current_index] = "high anomaly"
-            else:
+            if test >= strdev_tests * 2 + old_mean_tests or test <= old_mean_tests - strdev_tests * 2: # low importance anomaly
                 anomalies_low.iat[current_index, 1] = datapoint
                 df[trend_type][current_index] = "low anomaly"
+            else: # high importance anomaly
+                anomalies.iat[current_index, 1] = datapoint
+                df[trend_type][current_index] = "high anomaly"
     else:
         current_trend.append(datapoint)
         current_tests.append(test)
@@ -155,7 +155,7 @@ if y_axis == 'ATT_TP_UL_MV':
   fig.add_trace(go.Scatter(x=anomalies.TEST_PERIOD_FORMATTED, y=anomalies.ATT_TP_UL_MV,
                           mode='markers', name='High Anomaly', marker={'color' : 'red'}))
   fig.add_trace(go.Scatter(x=anomalies_low.TEST_PERIOD_FORMATTED, y=anomalies_low.ATT_TP_UL_MV,
-                          mode='markers', name='Low Anomaly', marker={'color' : 'orange'}))
+                          mode='markers', name='Low Anomaly', marker={'color' : 'yellow'}))
   fig.add_trace(go.Scatter(x=shifts.TEST_PERIOD_FORMATTED, y=shifts.ATT_TP_UL_MV,
                           mode='markers', name='Shift', marker={'color' : 'springgreen'}))
   fig.add_trace(go.Scatter(x=trends.TEST_PERIOD_FORMATTED, y=trends.ATT_TP_UL_MV,
@@ -166,7 +166,7 @@ else:
   fig.add_trace(go.Scatter(x=anomalies.TEST_PERIOD_FORMATTED, y=anomalies.ATT_TP_DL_MV,
                           mode='markers', name='High Anomaly', marker={'color' : 'red'}))
   fig.add_trace(go.Scatter(x=anomalies_low.TEST_PERIOD_FORMATTED, y=anomalies_low.ATT_TP_DL_MV,
-                          mode='markers', name='Low Anomaly', marker={'color' : 'orange'}))
+                          mode='markers', name='Low Anomaly', marker={'color' : 'yellow'}))
   fig.add_trace(go.Scatter(x=shifts.TEST_PERIOD_FORMATTED, y=shifts.ATT_TP_DL_MV,
                           mode='markers', name='Shift', marker={'color' : 'springgreen'}))
   fig.add_trace(go.Scatter(x=trends.TEST_PERIOD_FORMATTED, y=trends.ATT_TP_DL_MV,
