@@ -1,3 +1,10 @@
+# This program takes in an excel sheet with network data and produces an
+# image of a graph and opens an interactive graph in the browser through localhost.
+
+# Written by Maxime Andre Dahan in collaboration with
+# Pranav Souri Itabada, Kranthi Raj Vellanki, and Jayanth Srinivasan Prabakaran
+# August 11th, 2022
+
 import pandas as pd
 import statistics as stats
 import numpy as np
@@ -11,6 +18,7 @@ trend_type = "TREND_TYPE"
 test_count = "ATT_TEST_COUNT_MV"
 file_name = 'amCharts National.csv'
 
+# read to dataframe and clean excel file
 data = pd.read_csv(file_name)
 df = pd.DataFrame()
 df[x_axis] = pd.to_datetime(data[x_axis])
@@ -137,18 +145,17 @@ if j < len(trends[y_axis]):
       df[trend_type][j] = name
     j += 1
 
+# printing found trends
 scale = 0
 for i in range(len(df[y_axis])):
   print(str(df[x_axis][i + scale]) + " type: " + str(df[trend_type][i + scale]))
 
-from matplotlib.pylab import rcParams
-import matplotlib.pyplot as plt
-import plotly.express as px
 import plotly.graph_objects as go
 import math
 
 fig = go.Figure()
 
+# draws graph elements for download or upload
 if y_axis == 'ATT_TP_UL_MV':
   fig.add_trace(go.Scatter(x=df.TEST_PERIOD_FORMATTED, y=df.ATT_TP_UL_MV,
                           mode='lines', name=y_axis))
@@ -192,5 +199,5 @@ fig.update_layout(showlegend=True, title={
         'xanchor': 'center',
         'yanchor': 'top'})
 
-fig.show()
-fig.write_image(file=str(place + " " + y_axis + ".png"), width=1280, height=720)
+fig.show() # opens interactive graph in browser through localhost
+fig.write_image(file=str(place + " " + y_axis + ".png"), width=1280, height=720) # saves picture of graph
